@@ -10,6 +10,7 @@ export default function Home() {
   const [cameraOn, setCameraOn] = useState(false);
   const [count, setCount] = useState(3);
   const [takingPhoto, setTakingPhoto] = useState(false);
+  const [awaitingResponse, setAwaitingResponse] = useState(false);
   const overlayRef = useRef<HTMLDivElement | null>(null);
   let photoTaken = false;
   function activateCamera() {
@@ -65,10 +66,13 @@ export default function Home() {
   function copyEmoji() {
     navigator.clipboard.writeText(emoji).then(() => {
       console.log("Emoji copied to clipboard!");
+      alert("Emoji copied to clipboard!");
     });
   }
 
   async function identifyEmoji(imageData: string) {
+    setAwaitingResponse(true);
+    setEmoji("");
     const emojiResponse = (await fetch("/api/identify", {
       method: "POST",
       headers: {
@@ -77,8 +81,9 @@ export default function Home() {
       body: JSON.stringify({ imageData: imageData }),
     }).catch((err) => {
       console.error(`An error occurred: ${err}`);
+      setEmoji("❌");
     })) as Response;
-
+    setAwaitingResponse(false);
     const returnedEmoji = (await emojiResponse.text()) as string;
     if (returnedEmoji !== "") {
       setEmoji(returnedEmoji);
@@ -101,7 +106,7 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-8 h-full overflow-auto lg:px-20 bg-no-repeat bg-cover bg-[url('/images/ffflux.svg')]">
+    <main className="flex flex-col items-center justify-between p-8 h-full overflow-auto lg:px-20 bg-no-repeat bg-cover bg-[url('/images/ffflux.svg')]">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full h-full">
         <div className="w-full flex flex-col items-center gap-4 order-1 lg:order-2">
           <div className="flex flex-row items-center">
@@ -135,19 +140,22 @@ export default function Home() {
             </div>
           </div>
           <div className="flex flex-col">
-            <input className="w-24 text-center bg-none text-[4rem] rounded-t-lg" readOnly={true} value={emoji}></input>
+            <div className="flex items-center justify-center">
+              <input className={"w-24 text-center bg-none text-[4rem] rounded-t-lg "} readOnly={true} value={emoji}></input>
+              {awaitingResponse ? <p className="absolute text-6xl animate-spin">❔</p> : null}
+            </div>
             <button onClick={copyEmoji} className="w-24 text-3xl bg-black rounded-b-lg text-white">
               COPY
             </button>
           </div>
         </div>
-        <div className="w-full h-20 flex flex-col gap-4 order-1">
+        <div className="w-full flex flex-col gap-4 order-1">
           <div className="flex flex-col gap-4 text-xl lg:text-3xl">
             <p>Where&apos;s that emoji?</p>
             <p>Where did it go?</p>
             <p>I know it was here, somewhere.</p>
           </div>
-          <div className="w-64 pb-3 lg:w-[30rem]">
+          <div className="w-64 pb-3 lg:w-[30rem] h-auto">
             <img alt="emoji keyboard" src="/images/emoji-keyboard.jpg" width={450} height={300}></img>
           </div>
         </div>
