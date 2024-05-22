@@ -1,22 +1,43 @@
 "use client";
 import CameraIcon from "@/icons/camera";
-import Image from "next/image";
+import StopIcon from "@/icons/stop";
+// import Image from "next/image";
 import { useState } from "react";
 
 export default function Home() {
   const [video, setVideo] = useState<HTMLVideoElement | null>(null);
 
+  const [cameraOn, setCameraOn] = useState(false);
+
   function activateCamera() {
-    alert("Camera activated");
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: false })
       .then((stream) => {
         video!.srcObject = stream;
+        setCameraOn(true);
+
         video!.play();
       })
       .catch((err) => {
         console.error(`An error occurred: ${err}`);
       });
+  }
+
+  function takePhoto() {
+    const canvas = document.createElement("canvas");
+    canvas.width = video!.videoWidth;
+    canvas.height = video!.videoHeight;
+    canvas.getContext("2d")!.drawImage(video!, 0, 0, canvas.width, canvas.height);
+    const data = canvas.toDataURL("image/png");
+    const img: HTMLImageElement = new Image();
+    img.width = canvas.width; // Set the width property separately
+    img.src = data;
+    document.body.appendChild(img);
+  }
+
+  function deactivateCamera() {
+    setCameraOn(false);
+    video!.srcObject?.getTracks().forEach((track) => track.stop());
   }
 
   return (
@@ -26,9 +47,25 @@ export default function Home() {
           <h1 className="text-2xl">🤔🤔🤔🤔.ws</h1>
           <div className="bg-white/30 w-full h-60 rounded-lg flex items-center justify-center relative drop-shadow-md">
             <video ref={(video) => setVideo(video)} className="w-full h-full object-cover rounded-lg" autoPlay playsInline />
-            <button className="w-20 h-20 bg-black/60 rounded-2xl drop-shadow-lg absolute bottom-0 mb-2" onClick={activateCamera}>
-              <CameraIcon />
-            </button>
+            <div className="flex items-center absolute bottom-0 gap-2 mb-2">
+              <button
+                className="w-16 h-16 bg-black/60 rounded-2xl drop-shadow-lg"
+                onClick={() => {
+                  if (video?.srcObject) {
+                    takePhoto();
+                  } else {
+                    activateCamera();
+                  }
+                }}
+              >
+                <CameraIcon />
+              </button>
+              {cameraOn ? (
+                <button className="w-16 h-16 bg-black/60 rounded-2xl drop-shadow-lg" onClick={deactivateCamera}>
+                  <StopIcon />
+                </button>
+              ) : null}
+            </div>
           </div>
         </div>
         <div className=" w-full h-20 flex flex-col gap-4">
@@ -37,7 +74,7 @@ export default function Home() {
             <p>Where did it go?</p>
             <p>I know it was here, somewhere.</p>
           </div>
-          <Image alt="emoji keyboard" src="/images/emoji-keyboard.jpg" width={250} height={200} />
+          <img alt="emoji keyboard" src="/images/emoji-keyboard.jpg" width={250} height={200}></img>
         </div>
       </div>
       <div className="w-full flex flex-col gap-4 justify-between text-gray-900">
