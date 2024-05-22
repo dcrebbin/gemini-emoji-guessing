@@ -8,7 +8,7 @@ export async function GET(req: Request) {
   const image = {
     inlineData: {
       data: imageData,
-      mimeType: "image/jpg",
+      mimeType: "image/png",
     },
   };
 

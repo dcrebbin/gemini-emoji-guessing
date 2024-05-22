@@ -5,7 +5,7 @@ import { useState } from "react";
 
 export default function Home() {
   const [video, setVideo] = useState<HTMLVideoElement | null>(null);
-
+  const [emoji, setEmoji] = useState("❔");
   const [cameraOn, setCameraOn] = useState(false);
 
   function activateCamera() {
@@ -22,16 +22,39 @@ export default function Home() {
       });
   }
 
-  function takePhoto() {
+  async function takePhoto() {
     const canvas = document.createElement("canvas");
     canvas.width = video!.videoWidth;
     canvas.height = video!.videoHeight;
     canvas.getContext("2d")!.drawImage(video!, 0, 0, canvas.width, canvas.height);
     const data = canvas.toDataURL("image/png");
-    const img: HTMLImageElement = new Image();
-    img.width = canvas.width; // Set the width property separately
-    img.src = data;
-    document.body.appendChild(img);
+    console.log(data);
+  }
+
+  function copyEmoji() {
+    navigator.clipboard.writeText(emoji).then(() => {
+      console.log("Emoji copied to clipboard!");
+    });
+  }
+
+  async function identifyEmoji(imageData: string) {
+    const emojiResponse = (await fetch("/api/identify", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ imageData: imageData }),
+    }).catch((err) => {
+      console.error(`An error occurred: ${err}`);
+    })) as Response;
+
+    const returnedEmoji = (await emojiResponse.json()) as string;
+    if (returnedEmoji !== "" && returnedEmoji.length === 1) {
+      setEmoji(returnedEmoji);
+      console.log(`The emoji is: ${returnedEmoji}`);
+    } else {
+      console.log("No emoji found.");
+    }
   }
 
   function deactivateCamera() {
@@ -71,6 +94,12 @@ export default function Home() {
                 </button>
               ) : null}
             </div>
+          </div>
+          <div className="flex flex-col">
+            <input className="w-24 text-center bg-none text-[4rem] rounded-t-lg" value={emoji}></input>
+            <button onClick={copyEmoji} className="w-24 text-3xl bg-black rounded-b-lg">
+              COPY
+            </button>
           </div>
         </div>
         <div className="w-full h-20 flex flex-col gap-4 order-1">
