@@ -1,17 +1,31 @@
 "use client";
 import CameraIcon from "@/icons/camera";
 import Image from "next/image";
+import { useState } from "react";
 
-function activateCamera() {
-  alert("Camera activated");
-}
 export default function Home() {
+  const [video, setVideo] = useState<HTMLVideoElement | null>(null);
+
+  function activateCamera() {
+    alert("Camera activated");
+    navigator.mediaDevices
+      .getUserMedia({ video: true, audio: false })
+      .then((stream) => {
+        video!.srcObject = stream;
+        video!.play();
+      })
+      .catch((err) => {
+        console.error(`An error occurred: ${err}`);
+      });
+  }
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-8 bg-no-repeat bg-cover bg-[url('/images/ffflux.svg')]">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 direct grid-flow-col-row w-full h-full">
         <div className="w-full flex flex-col items-center gap-4">
           <h1 className="text-2xl">🤔🤔🤔🤔.ws</h1>
           <div className="bg-white/30 w-full h-60 rounded-lg flex items-center justify-center relative drop-shadow-md">
+            <video ref={(video) => setVideo(video)} className="w-full h-full object-cover rounded-lg" autoPlay playsInline />
             <button className="w-20 h-20 bg-black/60 rounded-2xl drop-shadow-lg absolute bottom-0 mb-2" onClick={activateCamera}>
               <CameraIcon />
             </button>
