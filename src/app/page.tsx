@@ -89,6 +89,7 @@ export default function Home() {
       setEmoji(returnedEmoji);
       console.log(`The emoji is: ${returnedEmoji}`);
     } else {
+      setEmoji("❌");
       console.log("No emoji found.");
     }
   }
