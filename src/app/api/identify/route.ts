@@ -4,7 +4,7 @@ export async function POST(req: Request) {
   const { imageData } = await req.json();
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY as string);
   const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
-  const prompt = "Find the closest matching human emoji with a face to this image. Only one emoji will be returned. If no emoji is found, the response will be empty.";
+  const prompt = "Find the closest matching emoji. Prioritize human expressions and body language. Only one emoji will be returned. If no emoji is found, the response will be empty.";
   const image = {
     inlineData: {
       data: imageData,

@@ -1,5 +1,6 @@
 "use client";
 import CameraIcon from "@/icons/camera";
+import Github from "@/icons/github";
 import StopIcon from "@/icons/stop";
 import { useRef, useState } from "react";
 
@@ -89,7 +90,8 @@ export default function Home() {
 
   function deactivateCamera() {
     setCameraOn(false);
-    video!.srcObject?.getTracks().forEach((track) => track.stop());
+    const mediaStream = video!.srcObject as MediaStream;
+    mediaStream.getTracks().forEach((track) => track.stop());
     setVideo((prev) => {
       if (prev) {
         prev.srcObject = null;
@@ -102,8 +104,13 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center justify-between p-8 h-full overflow-auto lg:px-20 bg-no-repeat bg-cover bg-[url('/images/ffflux.svg')]">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full h-full">
         <div className="w-full flex flex-col items-center gap-4 order-1 lg:order-2">
-          <h1 className="text-2xl lg:text-4xl">🤔🤔🤔🤔.ws</h1>
-          <div className="bg-white/30 w-full md:h-[17rem] lg:h-[30rem] h-60 rounded-lg flex items-center justify-center relative drop-shadow-md">
+          <div className="flex flex-row items-center">
+            <h1 className="text-2xl lg:text-4xl text-white flex">🤔🤔🤔🤔.ws </h1>
+            <a className="w-14 hover:drop-shadow-md" target="_blank" href="https://github.com/dcrebbin/gemini-emoji-guessing">
+              <Github />
+            </a>
+          </div>
+          <div className="bg-white/30 w-full md:h-[17rem] lg:h-[30rem] h -60 rounded-lg flex items-center justify-center relative drop-shadow-md">
             <div ref={overlayRef} className="w-full h-full absolute"></div>
             <video ref={(video) => setVideo(video)} className="w-full h-full object-cover rounded-lg" autoPlay playsInline />
             <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">{count > 0 && takingPhoto ? <p className="text-[8rem] text-black/50">{count}</p> : null}</div>
@@ -129,7 +136,7 @@ export default function Home() {
           </div>
           <div className="flex flex-col">
             <input className="w-24 text-center bg-none text-[4rem] rounded-t-lg" readOnly={true} value={emoji}></input>
-            <button onClick={copyEmoji} className="w-24 text-3xl bg-black rounded-b-lg">
+            <button onClick={copyEmoji} className="w-24 text-3xl bg-black rounded-b-lg text-white">
               COPY
             </button>
           </div>
