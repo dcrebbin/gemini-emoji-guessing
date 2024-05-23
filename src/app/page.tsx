@@ -1,8 +1,9 @@
 "use client";
-import CameraIcon from "@/icons/camera";
-import Github from "@/icons/github";
-import StopIcon from "@/icons/stop";
 import { useRef, useState } from "react";
+import Github from "../icons/github";
+import React from "react";
+import CameraIcon from "../icons/camera";
+import StopIcon from "../icons/stop";
 
 export default function Home() {
   const [video, setVideo] = useState<HTMLVideoElement | null>(null);
