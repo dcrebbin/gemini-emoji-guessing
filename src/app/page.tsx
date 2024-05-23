@@ -13,6 +13,7 @@ export default function Home() {
   const [awaitingResponse, setAwaitingResponse] = useState(false);
   const overlayRef = useRef<HTMLDivElement | null>(null);
   let photoTaken = false;
+  const copyRef = useRef<HTMLButtonElement | null>(null);
   function activateCamera() {
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: false })
@@ -63,10 +64,26 @@ export default function Home() {
     identifyEmoji(base64Image);
   }
 
+  function copyAnimation() {
+    setTimeout(() => {
+      copyRef.current!.innerText = "COPY";
+      copyRef.current?.classList.remove("text-2xl");
+      copyRef.current?.classList.remove("pb-1");
+
+      copyRef.current?.classList.add("text-3xl");
+      copyRef.current!.style.backgroundColor = "black";
+    }, 200);
+  }
+
   function copyEmoji() {
     navigator.clipboard.writeText(emoji).then(() => {
       console.log("Emoji copied to clipboard!");
-      alert("Emoji copied to clipboard!");
+      copyRef.current!.innerText = "COPIED!";
+      copyRef.current?.classList.add("pb-1");
+      copyRef.current?.classList.remove("text-3xl");
+      copyRef.current?.classList.add("text-2xl");
+      copyRef.current!.style.backgroundColor = "green";
+      copyAnimation();
     });
   }
 
@@ -145,7 +162,7 @@ export default function Home() {
               <input className={"w-24 text-center bg-none text-[4rem] rounded-t-lg "} readOnly={true} value={emoji}></input>
               {awaitingResponse ? <p className="absolute text-6xl animate-spin">❔</p> : null}
             </div>
-            <button onClick={copyEmoji} className="w-24 text-3xl bg-black rounded-b-lg text-white">
+            <button ref={copyRef} onClick={copyEmoji} className="w-24 text-3xl bg-black rounded-b-lg text-white">
               COPY
             </button>
           </div>
