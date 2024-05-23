@@ -153,11 +153,11 @@ export default function Home() {
 
   return (
     <main className="font-sans flex flex-col items-center justify-between p-8 min-h-screen overflow-auto lg:px-20 bg-no-repeat bg-cover bg-[url('/images/ffflux.svg')]">
-      <div ref={modalRef} className="bg-white drop-shadow-md w-fit absolute top-0 h-fit m-10 z-[99] rounded-lg left-[-100%]">
+      <div ref={modalRef} className="bg-white drop-shadow-md mx-4 my-4 self-center h-[80vh] absolute top-0 z-[99] rounded-lg inset-0 lg:w-fit lg:h-fit">
         <button
           className="absolute top-0 right-0 text-black text-6xl px-4"
           onClick={() => {
-            if (modalRef?.current) modalRef.current.style.left = "-100%";
+            if (modalRef?.current) modalRef.current.style.left = "150%";
           }}
         >
           -
