@@ -171,7 +171,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="absolute bottom-0 flex items-center justify-center p-2 right-0">
+        <div className="bottom-0 flex items-center justify-center p-2 right-0">
           <div className="bg-black/60 p-2 rounded-lg">
             <button className="w-8 text-center" onClick={downloadSharingImage}>
               <DownloadIcon />
