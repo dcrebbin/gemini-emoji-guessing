@@ -1,19 +1,25 @@
 "use client";
 import { useRef, useState } from "react";
-import Github from "../icons/github";
+import GithubIcon from "../icons/github";
 import React from "react";
 import CameraIcon from "../icons/camera";
 import StopIcon from "../icons/stop";
+import ShareIcon from "../icons/share";
+import DownloadIcon from "../icons/download";
+import PlaceholderIcon from "../icons/placeholder";
 
 export default function Home() {
   const [video, setVideo] = useState<HTMLVideoElement | null>(null);
   const [emoji, setEmoji] = useState("❔");
   const imageRef = useRef<HTMLImageElement | null>(null);
+  const sharedImageRef = useRef<HTMLImageElement | null>(null);
   const [cameraOn, setCameraOn] = useState(false);
   const [count, setCount] = useState(3);
   const [takingPhoto, setTakingPhoto] = useState(false);
   const [awaitingResponse, setAwaitingResponse] = useState(false);
   const overlayRef = useRef<HTMLDivElement | null>(null);
+
+  const modalRef = useRef<HTMLDivElement | null>(null);
   let photoTaken = false;
   const copyRef = useRef<HTMLButtonElement | null>(null);
   function activateCamera() {
@@ -61,6 +67,7 @@ export default function Home() {
     const data = canvas.toDataURL("image/png");
     console.log("Photo taken!");
     imageRef.current!.src = data;
+    sharedImageRef.current!.src = data;
     const base64Image = data.split(",")[1];
     setTakingPhoto(false);
     identifyEmoji(base64Image);
@@ -125,14 +132,59 @@ export default function Home() {
     });
   }
 
+  function downloadSharingImage() {
+    //save div as image
+    const image = new Image();
+    image.src = imageRef.current!.src;
+    const canvas = document.createElement("canvas");
+    canvas.width = image.width;
+    canvas.height = image.height * 2;
+    const context = canvas.getContext("2d");
+    context!.fillStyle = "white";
+    context!.fillRect(0, 0, canvas.width, 300);
+    context!.font = "248px sans-serif";
+    context!.fillText(emoji, 150, 250);
+    context!.drawImage(image, 0, 300);
+    const link = document.createElement("a");
+    link.download = "emoji.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  }
+
   return (
     <main className="font-sans flex flex-col items-center justify-between p-8 min-h-screen overflow-auto lg:px-20 bg-no-repeat bg-cover bg-[url('/images/ffflux.svg')]">
+      <div ref={modalRef} className="bg-white drop-shadow-md w-[80%] fixed top-0 h-fit m-10 z-[99] rounded-lg left-[-100%]">
+        <button
+          className="absolute top-0 right-0 text-black text-6xl px-4"
+          onClick={() => {
+            if (modalRef?.current) modalRef.current.style.left = "-100%";
+          }}
+        >
+          -
+        </button>
+        <div className="grid grid-cols-1 h-full ">
+          <p className="text-[9rem] text-center self-center">{emoji}</p>
+          <div className="w-full h-full flex items-center justify-center">
+            <div className="w-full p-4 h-full">
+              {sharedImageRef.current?.src ? null : <PlaceholderIcon />}
+              <img ref={sharedImageRef} className="block object-cover w-max block overflow-hidden h-full image rounded-lg drop-shadow-md" width={300} height={300}></img>
+            </div>
+          </div>
+        </div>
+        <div className="absolute bottom-0 flex items-center justify-center p-2 right-0">
+          <div className="bg-black/60 p-2 rounded-lg">
+            <button className="w-8 text-center" onClick={downloadSharingImage}>
+              <DownloadIcon />
+            </button>
+          </div>
+        </div>
+      </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full h-full">
         <div className="w-full flex flex-col items-center gap-4 order-1 lg:order-2">
           <div className="flex flex-row items-center">
             <h1 className="text-2xl lg:text-4xl text-white flex">🤔🤔🤔🤔.ws </h1>
             <a className="w-14 hover:drop-shadow-md" target="_blank" href="https://github.com/dcrebbin/gemini-emoji-guessing">
-              <Github />
+              <GithubIcon />
             </a>
           </div>
           <div className="bg-white/30 w-full md:h-[17rem] lg:h-[30rem] h -60 rounded-lg flex items-center justify-center relative drop-shadow-md">
@@ -173,6 +225,16 @@ export default function Home() {
               </button>
             </div>
           </div>
+          {imageRef.current?.src ? (
+            <button
+              onClick={() => {
+                if (modalRef?.current) modalRef.current.style.left = "0";
+              }}
+              className="p-2 bg-black/60 rounded-lg w-10"
+            >
+              <ShareIcon />
+            </button>
+          ) : null}
         </div>
         <div className="w-full flex flex-col gap-4 order-1">
           <div className="flex flex-col gap-4 text-xl lg:text-3xl">
