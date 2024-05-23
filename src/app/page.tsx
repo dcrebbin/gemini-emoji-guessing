@@ -153,7 +153,7 @@ export default function Home() {
 
   return (
     <main className="font-sans flex flex-col items-center justify-between p-8 min-h-screen overflow-auto lg:px-20 bg-no-repeat bg-cover bg-[url('/images/ffflux.svg')]">
-      <div ref={modalRef} className="bg-white drop-shadow-md mx-4 my-4 self-center h-[80vh] fixed top-0 z-[99] rounded-lg inset-0 lg:w-fit lg:h-fit left-[150%]">
+      <div ref={modalRef} className="bg-white drop-shadow-md mx-4 my-4 self-center h-[90vh] fixed top-0 z-[99] rounded-lg inset-0 lg:w-fit lg:h-fit left-[150%]">
         <button
           className="absolute top-0 right-0 text-black text-6xl px-4"
           onClick={() => {
@@ -237,7 +237,7 @@ export default function Home() {
           ) : null}
         </div>
         <div className="w-full flex flex-col gap-4 order-1">
-          <div className="flex flex-col gap-4 text-xl lg:text-3xl">
+          <div className="flex flex-col gap-4 text-xl lg:text-3xl text-white">
             <p>Where&apos;s that emoji?</p>
             <p>Where did it go?</p>
             <p>I know it was here, somewhere.</p>
