@@ -7,6 +7,7 @@ import { useRef, useState } from "react";
 export default function Home() {
   const [video, setVideo] = useState<HTMLVideoElement | null>(null);
   const [emoji, setEmoji] = useState("❔");
+  const imageRef = useRef<HTMLImageElement | null>(null);
   const [cameraOn, setCameraOn] = useState(false);
   const [count, setCount] = useState(3);
   const [takingPhoto, setTakingPhoto] = useState(false);
@@ -58,7 +59,7 @@ export default function Home() {
     canvas.getContext("2d")!.drawImage(video!, 0, 0, canvas.width, canvas.height);
     const data = canvas.toDataURL("image/png");
     console.log("Photo taken!");
-
+    imageRef.current!.src = data;
     const base64Image = data.split(",")[1];
     setTakingPhoto(false);
     identifyEmoji(base64Image);
@@ -157,14 +158,19 @@ export default function Home() {
               ) : null}
             </div>
           </div>
-          <div className="flex flex-col">
-            <div className="flex items-center justify-center">
-              <input className={"w-24 text-center bg-none text-[4rem] rounded-t-lg "} readOnly={true} value={emoji}></input>
-              {awaitingResponse ? <p className="absolute text-6xl animate-spin">❔</p> : null}
+          <div className="flex gap-6">
+            <div className="w-24 h-[8.2rem] rounded-lg bg-white">
+              <img className="object-cover w-max block overflow-hidden h-full image rounded-lg drop-shadow-md" ref={imageRef}></img>
             </div>
-            <button ref={copyRef} onClick={copyEmoji} className="w-24 text-3xl bg-black rounded-b-lg text-white">
-              COPY
-            </button>
+            <div className="flex flex-col drop-shadow-md">
+              <div className="flex items-center justify-center">
+                <input className={"w-24 text-center bg-none text-[4rem] rounded-t-lg "} readOnly={true} value={emoji}></input>
+                {awaitingResponse ? <p className="absolute text-6xl animate-spin">❔</p> : null}
+              </div>
+              <button ref={copyRef} onClick={copyEmoji} className="w-24 text-3xl bg-black rounded-b-lg text-white">
+                COPY
+              </button>
+            </div>
           </div>
         </div>
         <div className="w-full flex flex-col gap-4 order-1">
@@ -180,13 +186,16 @@ export default function Home() {
       </div>
       <div className="w-full flex flex-col lg:flex-row lg:text-xl gap-4 justify-between text-gray-900">
         <p>
-          by{' '}
+          by{" "}
           <a className="underline" href="https://dcrebb.in">
             d.crebbin
           </a>
         </p>
         <p>
-          An experiment, powered by <a href="https://gemini.google.com" className="border-black/50 border-[1px] px-1 rounded-lg font-bold">Gemini</a>
+          An experiment, powered by{" "}
+          <a href="https://gemini.google.com" className="border-black/50 border-[1px] px-1 rounded-lg font-bold">
+            Gemini
+          </a>
         </p>
       </div>
     </main>
