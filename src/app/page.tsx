@@ -124,7 +124,7 @@ export default function Home() {
   }
 
   return (
-    <main className="flex flex-col items-center justify-between p-8 h-full overflow-auto lg:px-20 bg-no-repeat bg-cover bg-[url('/images/ffflux.svg')]">
+    <main className="font-sans flex flex-col items-center justify-between p-8 h-full overflow-auto lg:px-20 bg-no-repeat bg-cover bg-[url('/images/ffflux.svg')]">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full h-full">
         <div className="w-full flex flex-col items-center gap-4 order-1 lg:order-2">
           <div className="flex flex-row items-center">
@@ -179,13 +179,15 @@ export default function Home() {
         </div>
       </div>
       <div className="w-full flex flex-col lg:flex-row lg:text-xl gap-4 justify-between text-gray-900">
-        <p className="flex gap-1">
-          by
+        <p>
+          by{' '}
           <a className="underline" href="https://dcrebb.in">
             d.crebbin
           </a>
         </p>
-        <p>An experiment, powered by Gemini</p>
+        <p>
+          An experiment, powered by <a href="https://gemini.google.com" className="border-black/50 border-[1px] px-1 rounded-lg font-bold">Gemini</a>
+        </p>
       </div>
     </main>
   );
