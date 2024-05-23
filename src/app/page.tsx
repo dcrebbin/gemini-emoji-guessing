@@ -189,7 +189,7 @@ export default function Home() {
         <p>
           by{" "}
           <a className="underline" href="https://dcrebb.in">
-            d.crebbin
+            dcrebb.in
           </a>
         </p>
         <p>
