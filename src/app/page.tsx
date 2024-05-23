@@ -153,7 +153,7 @@ export default function Home() {
 
   return (
     <main className="font-sans flex flex-col items-center justify-between p-8 min-h-screen overflow-auto lg:px-20 bg-no-repeat bg-cover bg-[url('/images/ffflux.svg')]">
-      <div ref={modalRef} className="bg-white drop-shadow-md w-[80%] fixed top-0 h-fit m-10 z-[99] rounded-lg left-[-100%]">
+      <div ref={modalRef} className="bg-white drop-shadow-md w-fit fixed top-0 h-fit m-10 z-[99] rounded-lg left-[-100%]">
         <button
           className="absolute top-0 right-0 text-black text-6xl px-4"
           onClick={() => {
@@ -162,10 +162,10 @@ export default function Home() {
         >
           -
         </button>
-        <div className="grid grid-cols-1 h-full ">
+        <div className="grid grid-cols-1 h-full w-full">
           <p className="text-[9rem] text-center self-center">{emoji}</p>
           <div className="w-full h-full flex items-center justify-center">
-            <div className="w-full p-4 h-full">
+            <div className="w-full p-4 h-full flex items-center justify-center">
               {sharedImageRef.current?.src ? null : <PlaceholderIcon />}
               <img ref={sharedImageRef} className="block object-cover w-max block overflow-hidden h-full image rounded-lg drop-shadow-md" width={300} height={300}></img>
             </div>
