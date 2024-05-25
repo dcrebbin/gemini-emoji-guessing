@@ -36,7 +36,7 @@ export default function PhotoEmojiComparison(props: Readonly<PhotoEmojiCompariso
   }
 
   return (
-    <div className="flex gap-6">
+    <div className="flex gap-6 z-10">
       <div className="w-24 rounded-lg bg-white flex flex-col relative items-center h-[8rem]">
         {!props.imageRef.current?.src ? (
           <div className="w-full h-fit absolute bg-white z-20 rounded-lg">
