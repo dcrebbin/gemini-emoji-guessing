@@ -17,7 +17,7 @@ export default function Home() {
   const [awaitingResponse, setAwaitingResponse] = useState(false);
   const [emojis, setEmojis] = useState<EmojiObject[]>(EMOJIS);
   const [emojisCollected, setEmojisCollected] = useState(0);
-
+  const emojiShowcaseView = useRef<HTMLDivElement | null>(null);
   const modalRef = useRef<HTMLDivElement | null>(null);
 
   async function identifyEmoji(imageData: string) {
@@ -41,11 +41,25 @@ export default function Home() {
     const returnedEmoji = (await emojiResponse.text()).trim();
     if (returnedEmoji !== "") {
       setEmoji(returnedEmoji);
+      scrollToEmoji(returnedEmoji);
       caughtEmoji(returnedEmoji);
       console.log(`The emoji is: ${returnedEmoji}`);
     } else {
       setEmoji("❌");
       console.log("No emoji found.");
+    }
+  }
+
+  function scrollToEmoji(emoji: string) {
+    if (!emojiShowcaseView.current) {
+      return;
+    }
+    const emojiElement = emojiShowcaseView.current.querySelector(`[data-emoji="${emoji}"]`) as HTMLElement;
+    if (emojiElement) {
+      emojiShowcaseView.current.scrollTo({
+        left: emojiElement.offsetLeft - emojiShowcaseView.current.clientWidth / 2 + emojiElement.clientWidth / 2,
+        behavior: "smooth",
+      });
     }
   }
 
@@ -85,7 +99,7 @@ export default function Home() {
             </button>
           ) : null}
         </div>
-        <InfoSection emojisCollected={emojisCollected} emojis={emojis} />
+        <InfoSection emojiShowcaseView={emojiShowcaseView} emojisCollected={emojisCollected} emojis={emojis} />
       </div>
       <Footer />
     </main>

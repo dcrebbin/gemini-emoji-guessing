@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import PlaceholderIcon from "../../icons/placeholder";
 
 interface PhotoEmojiComparisonProps {
   emoji: string;
@@ -24,7 +25,6 @@ export default function PhotoEmojiComparison(props: Readonly<PhotoEmojiCompariso
   function copyEmoji() {
     navigator.clipboard.writeText(props.emoji).then(() => {
       if (!copyRef.current) return;
-
       console.log("Emoji copied to clipboard!");
       copyRef.current.innerText = "COPIED!";
       copyRef.current?.classList.add("pb-1");
@@ -37,8 +37,17 @@ export default function PhotoEmojiComparison(props: Readonly<PhotoEmojiCompariso
 
   return (
     <div className="flex gap-6">
-      <div className="w-24 h-[8.2rem] rounded-lg bg-white">
-        <img alt="Mini photo used in the emoji comparison section" className="object-cover w-max block overflow-hidden h-full image rounded-lg drop-shadow-md" ref={props.imageRef}></img>
+      <div className="w-24 rounded-lg bg-white flex flex-col relative items-center">
+        {!props.imageRef.current?.src ? (
+          <div className="w-full h-fit absolute bg-white z-20 rounded-lg">
+            <PlaceholderIcon />
+          </div>
+        ) : null}
+
+        <img className="object-cover w-max block overflow-hidden h-full image rounded-lg drop-shadow-md z-10" ref={props.imageRef}></img>
+        <div className="w-full h-[2.2rem] bg-black text-white rounded-b-lg">
+          <p className="text-3xl text-center">Photo</p>
+        </div>
       </div>
       <div className="flex flex-col drop-shadow-md">
         <div className="flex items-center justify-center">
