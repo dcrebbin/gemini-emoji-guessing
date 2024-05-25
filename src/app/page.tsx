@@ -7,13 +7,8 @@ import { EMOJIS } from "./constants/emojis";
 import Footer from "./components/footer";
 import DownloadModal from "./components/download-modal";
 import Webcam from "./components/web-cam";
-import InfoSection from "./components/info-section";
+import InfoSection, { EmojiObject } from "./components/info-section";
 import PhotoEmojiComparison from "./components/photo-emoji-comparison";
-
-interface EmojiObject {
-  emoji: string;
-  emojiCaught: boolean;
-}
 
 export default function Home() {
   const [emoji, setEmoji] = useState("❔");

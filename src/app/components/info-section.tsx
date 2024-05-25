@@ -1,6 +1,14 @@
 import React from "react";
 
-export default function InfoSection(props: any) {
+interface InfoSectionProps {
+  emojis: EmojiObject[];
+}
+export interface EmojiObject {
+  emoji: string;
+  emojiCaught: boolean;
+}
+
+export default function InfoSection(props: InfoSectionProps) {
   return (
     <div className="w-full flex flex-col gap-4 order-1">
       <div className="flex flex-col gap-4 text-xl lg:text-3xl text-white">

@@ -1,6 +1,12 @@
 import React, { useRef } from "react";
 
-export default function PhotoEmojiComparison(props: any) {
+interface PhotoEmojiComparisonProps {
+  emoji: string;
+  imageRef: React.RefObject<HTMLImageElement>;
+  awaitingResponse: boolean;
+}
+
+export default function PhotoEmojiComparison(props: PhotoEmojiComparisonProps) {
   const copyRef = useRef<HTMLButtonElement | null>(null);
 
   function copyAnimation() {

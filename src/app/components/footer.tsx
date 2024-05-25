@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Footer(props: any) {
+export default function Footer() {
   return (
     <footer className="w-full flex flex-col lg:flex-row lg:text-xl gap-4 justify-between text-gray-900">
       <p>

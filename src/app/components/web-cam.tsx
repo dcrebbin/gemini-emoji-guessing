@@ -2,7 +2,13 @@ import React, { useRef, useState } from "react";
 import CameraIcon from "../../icons/camera";
 import StopIcon from "../../icons/stop";
 
-export default function Webcam(props: any) {
+interface WebcamProps {
+  imageRef: React.RefObject<HTMLImageElement>;
+  sharedImageRef: React.RefObject<HTMLImageElement>;
+  identifyEmoji: (imageData: string) => void;
+}
+
+export default function Webcam(props: WebcamProps) {
   const [video, setVideo] = useState<HTMLVideoElement | null>(null);
   const [cameraOn, setCameraOn] = useState(false);
   const [count, setCount] = useState(3);
@@ -12,7 +18,10 @@ export default function Webcam(props: any) {
 
   function deactivateCamera() {
     setCameraOn(false);
-    const mediaStream = video!.srcObject as MediaStream;
+    if (!video) {
+      return;
+    }
+    const mediaStream = video.srcObject as MediaStream;
     mediaStream.getTracks().forEach((track) => track.stop());
     setVideo((prev) => {
       if (prev) {
@@ -23,13 +32,15 @@ export default function Webcam(props: any) {
   }
 
   function activateCamera() {
+    if (!video) {
+      return;
+    }
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: false })
       .then((stream) => {
-        video!.srcObject = stream;
+        video.srcObject = stream;
         setCameraOn(true);
-
-        video!.play();
+        video.play();
       })
       .catch((err) => {
         console.error(`An error occurred: ${err}`);
@@ -46,9 +57,15 @@ export default function Webcam(props: any) {
           clearInterval(countDown);
           return 3;
         }
-        overlayRef.current!.style.backgroundColor = "white";
+        if (!overlayRef.current) {
+          return prev;
+        }
+        overlayRef.current.style.backgroundColor = "white";
         setTimeout(() => {
-          overlayRef.current!.style.backgroundColor = "transparent";
+          if (!overlayRef.current) {
+            return prev;
+          }
+          overlayRef.current.style.backgroundColor = "transparent";
         }, 100);
         return prev - 1;
       });

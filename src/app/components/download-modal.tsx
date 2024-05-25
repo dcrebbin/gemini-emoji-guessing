@@ -2,7 +2,14 @@ import React from "react";
 import DownloadIcon from "../../icons/download";
 import PlaceholderIcon from "../../icons/placeholder";
 
-export default function DownloadModal(props: any) {
+interface DownloadModalProps {
+  emoji: string;
+  imageRef: React.RefObject<HTMLImageElement>;
+  sharedImageRef: React.RefObject<HTMLImageElement>;
+  modalRef: React.RefObject<HTMLDivElement>;
+}
+
+export default function DownloadModal(props: DownloadModalProps) {
   function downloadSharingImage() {
     const image = new Image();
     image.src = props.imageRef.current!.src;
