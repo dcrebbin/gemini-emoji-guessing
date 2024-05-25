@@ -81,7 +81,7 @@ export default function Webcam(props: Readonly<WebcamProps>) {
   }
 
   async function takePhoto() {
-    if (!video) {
+    if (!video || photoTaken) {
       return;
     }
     photoTaken = true;

@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import GithubIcon from "../icons/github";
 import React from "react";
 import ShareIcon from "../icons/share";
@@ -56,24 +56,37 @@ export default function Home() {
     }
     const emojiElement = emojiShowcaseView.current.querySelector(`[data-emoji="${emoji}"]`) as HTMLElement;
     if (emojiElement) {
-      emojiShowcaseView.current.scrollTo({
-        left: emojiElement.offsetLeft - emojiShowcaseView.current.clientWidth / 2 + emojiElement.clientWidth / 2,
-        behavior: "smooth",
-      });
+      emojiElement.scrollIntoView({ behavior: "smooth", block: "center" });
     }
   }
 
   function caughtEmoji(emoji: string) {
     const emojiIndex = emojis.findIndex((emojiObject) => emojiObject.emoji === emoji);
     if (emojiIndex !== -1 && !emojis[emojiIndex].emojiCaught) {
+      console.log("Emoji Caught!");
       setEmojisCollected((prev) => prev + 1);
       setEmojis((prev) => {
         const newEmojis = [...prev];
         newEmojis[emojiIndex].emojiCaught = true;
+        localStorage.setItem("emojisCaught", JSON.stringify(newEmojis));
+        console.log("Emoji Saved!");
         return newEmojis;
       });
     }
   }
+
+  useEffect(() => {
+    console.log("Checking for emojis caught in local storage.");
+    const emojisCaught = localStorage.getItem("emojisCaught");
+    if (emojisCaught) {
+      const emojisCaughtArray = JSON.parse(emojisCaught) as EmojiObject[];
+      setEmojis(emojisCaughtArray);
+      setEmojisCollected(emojisCaughtArray.filter((emoji) => emoji.emojiCaught).length);
+    } else {
+      console.log("No emojis caught found in local storage.");
+      localStorage.setItem("emojisCaught", JSON.stringify(emojis));
+    }
+  }, []);
 
   return (
     <main className="font-sans flex flex-col items-center justify-between p-8 min-h-screen overflow-auto lg:px-20 bg-no-repeat bg-cover bg-[url('/images/ffflux.svg')]">
