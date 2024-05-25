@@ -2,30 +2,38 @@ import React from "react";
 import DownloadIcon from "../../icons/download";
 import PlaceholderIcon from "../../icons/placeholder";
 
-interface DownloadModalProps {
+interface ShareModalProps {
   emoji: string;
   imageRef: React.RefObject<HTMLImageElement>;
   sharedImageRef: React.RefObject<HTMLImageElement>;
   modalRef: React.RefObject<HTMLDivElement>;
 }
 
-export default function DownloadModal(props: Readonly<DownloadModalProps>) {
+export default function ShareModal(props: Readonly<ShareModalProps>) {
   function downloadSharingImage() {
     const image = new Image();
     image.src = props.imageRef.current!.src;
+
+    const link = document.createElement("a");
+    link.download = "emoji.png";
+    const shareableImage = createSharingImage(image);
+    if (!shareableImage) return;
+    link.href = shareableImage.toDataURL("image/png");
+    link.click();
+  }
+
+  function createSharingImage(image: HTMLImageElement) {
     const canvas = document.createElement("canvas");
     canvas.width = image.width;
     canvas.height = image.height * 2;
     const context = canvas.getContext("2d");
-    context!.fillStyle = "white";
-    context!.fillRect(0, 0, canvas.width, 300);
-    context!.font = "248px sans-serif";
-    context!.fillText(props.emoji, 150, 250);
-    context!.drawImage(image, 0, 300);
-    const link = document.createElement("a");
-    link.download = "emoji.png";
-    link.href = canvas.toDataURL("image/png");
-    link.click();
+    if (!context) return;
+    context.fillStyle = "white";
+    context.fillRect(0, 0, canvas.width, 300);
+    context.font = "248px sans-serif";
+    context.fillText(props.emoji, 150, 250);
+    context.drawImage(image, 0, 300);
+    return canvas;
   }
 
   return (

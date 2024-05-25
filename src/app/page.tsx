@@ -5,7 +5,7 @@ import React from "react";
 import ShareIcon from "../icons/share";
 import { EMOJIS } from "./constants/emojis";
 import Footer from "./components/footer";
-import DownloadModal from "./components/download-modal";
+import ShareModal from "./components/download-modal";
 import Webcam from "./components/web-cam";
 import InfoSection, { EmojiObject } from "./components/info-section";
 import PhotoEmojiComparison from "./components/photo-emoji-comparison";
@@ -16,6 +16,7 @@ export default function Home() {
   const sharedImageRef = useRef<HTMLImageElement | null>(null);
   const [awaitingResponse, setAwaitingResponse] = useState(false);
   const [emojis, setEmojis] = useState<EmojiObject[]>(EMOJIS);
+  const [emojisCollected, setEmojisCollected] = useState(0);
 
   const modalRef = useRef<HTMLDivElement | null>(null);
 
@@ -50,7 +51,8 @@ export default function Home() {
 
   function caughtEmoji(emoji: string) {
     const emojiIndex = emojis.findIndex((emojiObject) => emojiObject.emoji === emoji);
-    if (emojiIndex !== -1) {
+    if (emojiIndex !== -1 && !emojis[emojiIndex].emojiCaught) {
+      setEmojisCollected((prev) => prev + 1);
       setEmojis((prev) => {
         const newEmojis = [...prev];
         newEmojis[emojiIndex].emojiCaught = true;
@@ -61,7 +63,7 @@ export default function Home() {
 
   return (
     <main className="font-sans flex flex-col items-center justify-between p-8 min-h-screen overflow-auto lg:px-20 bg-no-repeat bg-cover bg-[url('/images/ffflux.svg')]">
-      <DownloadModal emoji={emoji} imageRef={imageRef} sharedImageRef={sharedImageRef} modalRef={modalRef} />
+      <ShareModal emoji={emoji} imageRef={imageRef} sharedImageRef={sharedImageRef} modalRef={modalRef} />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full h-full">
         <div className="w-full flex flex-col items-center gap-4 order-1 lg:order-2">
           <div className="flex flex-row items-center">
@@ -83,7 +85,7 @@ export default function Home() {
             </button>
           ) : null}
         </div>
-        <InfoSection emojis={emojis} />
+        <InfoSection emojisCollected={emojisCollected} emojis={emojis} />
       </div>
       <Footer />
     </main>

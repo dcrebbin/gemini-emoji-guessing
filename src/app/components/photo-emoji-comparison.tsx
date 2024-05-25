@@ -38,7 +38,7 @@ export default function PhotoEmojiComparison(props: Readonly<PhotoEmojiCompariso
   return (
     <div className="flex gap-6">
       <div className="w-24 h-[8.2rem] rounded-lg bg-white">
-        <img className="object-cover w-max block overflow-hidden h-full image rounded-lg drop-shadow-md" ref={props.imageRef}></img>
+        <img alt="Mini photo used in the emoji comparison section" className="object-cover w-max block overflow-hidden h-full image rounded-lg drop-shadow-md" ref={props.imageRef}></img>
       </div>
       <div className="flex flex-col drop-shadow-md">
         <div className="flex items-center justify-center">
