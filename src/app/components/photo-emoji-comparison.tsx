@@ -44,7 +44,7 @@ export default function PhotoEmojiComparison(props: Readonly<PhotoEmojiCompariso
           </div>
         ) : null}
 
-        <img className="object-cover w-max block overflow-hidden h-full image rounded-lg drop-shadow-md z-10 -scale-x-100" ref={props.imageRef}></img>
+        <img className="object-cover w-max block overflow-hidden h-full image rounded-t-lg drop-shadow-md z-10 -scale-x-100" ref={props.imageRef}></img>
         <div className="w-full h-[2.2rem] bg-black text-white rounded-b-lg">
           <p className="text-3xl text-center">Photo</p>
         </div>
