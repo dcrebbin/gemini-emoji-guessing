@@ -2,12 +2,13 @@
 import { useRef, useState } from "react";
 import GithubIcon from "../icons/github";
 import React from "react";
-import CameraIcon from "../icons/camera";
-import StopIcon from "../icons/stop";
 import ShareIcon from "../icons/share";
-import DownloadIcon from "../icons/download";
-import PlaceholderIcon from "../icons/placeholder";
 import { EMOJIS } from "./constants/emojis";
+import Footer from "./components/footer";
+import DownloadModal from "./components/download-modal";
+import Webcam from "./components/web-cam";
+import InfoSection from "./components/info-section";
+import PhotoEmojiComparison from "./components/photo-emoji-comparison";
 
 interface EmojiObject {
   emoji: string;
@@ -15,93 +16,13 @@ interface EmojiObject {
 }
 
 export default function Home() {
-  const [video, setVideo] = useState<HTMLVideoElement | null>(null);
   const [emoji, setEmoji] = useState("❔");
   const imageRef = useRef<HTMLImageElement | null>(null);
   const sharedImageRef = useRef<HTMLImageElement | null>(null);
-  const [cameraOn, setCameraOn] = useState(false);
-  const [count, setCount] = useState(3);
-  const [takingPhoto, setTakingPhoto] = useState(false);
   const [awaitingResponse, setAwaitingResponse] = useState(false);
-  const overlayRef = useRef<HTMLDivElement | null>(null);
   const [emojis, setEmojis] = useState<EmojiObject[]>(EMOJIS);
 
   const modalRef = useRef<HTMLDivElement | null>(null);
-  let photoTaken = false;
-  const copyRef = useRef<HTMLButtonElement | null>(null);
-  function activateCamera() {
-    navigator.mediaDevices
-      .getUserMedia({ video: true, audio: false })
-      .then((stream) => {
-        video!.srcObject = stream;
-        setCameraOn(true);
-
-        video!.play();
-      })
-      .catch((err) => {
-        console.error(`An error occurred: ${err}`);
-      });
-  }
-
-  function photoCountDown() {
-    photoTaken = false;
-    setTakingPhoto(true);
-    const countDown = setInterval(() => {
-      setCount((prev) => {
-        if (prev === 0) {
-          takePhoto();
-          clearInterval(countDown);
-          return 3;
-        }
-        overlayRef.current!.style.backgroundColor = "white";
-        setTimeout(() => {
-          overlayRef.current!.style.backgroundColor = "transparent";
-        }, 100);
-        return prev - 1;
-      });
-    }, 1000);
-  }
-
-  async function takePhoto() {
-    if (photoTaken) {
-      return;
-    }
-    photoTaken = true;
-    const canvas = document.createElement("canvas");
-    canvas.width = video!.videoWidth;
-    canvas.height = video!.videoHeight;
-    canvas.getContext("2d")!.drawImage(video!, 0, 0, canvas.width, canvas.height);
-    const data = canvas.toDataURL("image/png");
-    console.log("Photo taken!");
-    imageRef.current!.src = data;
-    sharedImageRef.current!.src = data;
-    const base64Image = data.split(",")[1];
-    setTakingPhoto(false);
-    identifyEmoji(base64Image);
-  }
-
-  function copyAnimation() {
-    setTimeout(() => {
-      copyRef.current!.innerText = "COPY";
-      copyRef.current?.classList.remove("text-2xl");
-      copyRef.current?.classList.remove("pb-1");
-
-      copyRef.current?.classList.add("text-3xl");
-      copyRef.current!.style.backgroundColor = "black";
-    }, 200);
-  }
-
-  function copyEmoji() {
-    navigator.clipboard.writeText(emoji).then(() => {
-      console.log("Emoji copied to clipboard!");
-      copyRef.current!.innerText = "COPIED!";
-      copyRef.current?.classList.add("pb-1");
-      copyRef.current?.classList.remove("text-3xl");
-      copyRef.current?.classList.add("text-2xl");
-      copyRef.current!.style.backgroundColor = "green";
-      copyAnimation();
-    });
-  }
 
   async function identifyEmoji(imageData: string) {
     setAwaitingResponse(true);
@@ -116,6 +37,10 @@ export default function Home() {
       console.error(`An error occurred: ${err}`);
       setEmoji("❌");
     })) as Response;
+    processEmojiIdentification(emojiResponse);
+  }
+
+  async function processEmojiIdentification(emojiResponse: Response) {
     setAwaitingResponse(false);
     const returnedEmoji = (await emojiResponse.text()).trim() as string;
     if (returnedEmoji !== "") {
@@ -139,65 +64,9 @@ export default function Home() {
     }
   }
 
-  function deactivateCamera() {
-    setCameraOn(false);
-    const mediaStream = video!.srcObject as MediaStream;
-    mediaStream.getTracks().forEach((track) => track.stop());
-    setVideo((prev) => {
-      if (prev) {
-        prev.srcObject = null;
-      }
-      return prev;
-    });
-  }
-
-  function downloadSharingImage() {
-    //save div as image
-    const image = new Image();
-    image.src = imageRef.current!.src;
-    const canvas = document.createElement("canvas");
-    canvas.width = image.width;
-    canvas.height = image.height * 2;
-    const context = canvas.getContext("2d");
-    context!.fillStyle = "white";
-    context!.fillRect(0, 0, canvas.width, 300);
-    context!.font = "248px sans-serif";
-    context!.fillText(emoji, 150, 250);
-    context!.drawImage(image, 0, 300);
-    const link = document.createElement("a");
-    link.download = "emoji.png";
-    link.href = canvas.toDataURL("image/png");
-    link.click();
-  }
-
   return (
     <main className="font-sans flex flex-col items-center justify-between p-8 min-h-screen overflow-auto lg:px-20 bg-no-repeat bg-cover bg-[url('/images/ffflux.svg')]">
-      <div ref={modalRef} className="bg-white drop-shadow-md mx-4 my-4 self-center h-[90vh] fixed top-0 z-[99] rounded-lg inset-0 lg:w-fit lg:h-fit left-[150%]">
-        <button
-          className="absolute top-0 right-0 text-black text-6xl px-4"
-          onClick={() => {
-            if (modalRef?.current) modalRef.current.style.left = "150%";
-          }}
-        >
-          -
-        </button>
-        <div className="grid grid-cols-1 h-full w-full">
-          <p className="text-[9rem] text-center self-center">{emoji}</p>
-          <div className="w-full h-full flex items-center justify-center">
-            <div className="w-full p-4 h-full flex items-center justify-center">
-              {sharedImageRef.current?.src ? null : <PlaceholderIcon />}
-              <img ref={sharedImageRef} className="block object-cover w-max block overflow-hidden h-full image rounded-lg drop-shadow-md" width={300} height={300}></img>
-            </div>
-          </div>
-        </div>
-        <div className="= bottom-0 flex items-center justify-center p-2 right-0">
-          <div className="bg-black/60 p-2 rounded-lg">
-            <button className="w-8 text-center" onClick={downloadSharingImage}>
-              <DownloadIcon />
-            </button>
-          </div>
-        </div>
-      </div>
+      <DownloadModal emoji={emoji} imageRef={imageRef} sharedImageRef={sharedImageRef} modalRef={modalRef} />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full h-full">
         <div className="w-full flex flex-col items-center gap-4 order-1 lg:order-2">
           <div className="flex flex-row items-center">
@@ -206,44 +75,8 @@ export default function Home() {
               <GithubIcon />
             </a>
           </div>
-          <div className="bg-white/30 w-full md:h-[17rem] lg:h-[30rem] h -60 rounded-lg flex items-center justify-center relative drop-shadow-md">
-            <div ref={overlayRef} className="w-full h-full absolute"></div>
-            <video ref={(video) => setVideo(video)} className="w-full h-full object-cover rounded-lg -scale-x-100" autoPlay playsInline />
-            <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">{count > 0 && takingPhoto ? <p className="text-[8rem] text-black/50">{count}</p> : null}</div>
-            <div className="flex items-center absolute bottom-0 gap-2 mb-2">
-              <button
-                className="w-16 h-16 bg-black/60 rounded-2xl drop-shadow-lg"
-                onClick={() => {
-                  if (video?.srcObject && count === 3) {
-                    photoCountDown();
-                  } else {
-                    activateCamera();
-                  }
-                }}
-              >
-                <CameraIcon />
-              </button>
-              {cameraOn ? (
-                <button className="w-16 h-16 bg-black/60 rounded-2xl drop-shadow-lg" onClick={deactivateCamera}>
-                  <StopIcon />
-                </button>
-              ) : null}
-            </div>
-          </div>
-          <div className="flex gap-6">
-            <div className="w-24 h-[8.2rem] rounded-lg bg-white">
-              <img className="object-cover w-max block overflow-hidden h-full image rounded-lg drop-shadow-md" ref={imageRef}></img>
-            </div>
-            <div className="flex flex-col drop-shadow-md">
-              <div className="flex items-center justify-center">
-                <input className={"w-24 text-center bg-none text-[4rem] rounded-t-lg "} readOnly={true} value={emoji}></input>
-                {awaitingResponse ? <p className="absolute text-6xl animate-spin">❔</p> : null}
-              </div>
-              <button ref={copyRef} onClick={copyEmoji} className="w-24 text-3xl bg-black rounded-b-lg text-white">
-                COPY
-              </button>
-            </div>
-          </div>
+          <Webcam imageRef={imageRef} sharedImageRef={sharedImageRef} identifyEmoji={identifyEmoji} />
+          <PhotoEmojiComparison emoji={emoji} imageRef={imageRef} awaitingResponse={awaitingResponse} />
           {imageRef.current?.src ? (
             <button
               onClick={() => {
@@ -255,41 +88,9 @@ export default function Home() {
             </button>
           ) : null}
         </div>
-        <div className="w-full flex flex-col gap-4 order-1">
-          <div className="flex flex-col gap-4 text-xl lg:text-3xl text-white">
-            <p>Where&apos;s that emoji?</p>
-            <p>Where did it go?</p>
-            <p>I know it was here, somewhere.</p>
-          </div>
-          <div className="w-64 pb-3 lg:w-[25rem] h-auto drop-shadow-md">
-            <div className="bg-[#E9EBEF] h-fit flex p-2 flex-col ">
-              <p className="text-[#BBBCC0] px-2 text-xs font-bold">SMILEYS & PEOPLE</p>
-              <div className="grid grid-flow-col grid-rows-5 overflow-x-auto overflow-y-hidden text-4xl">
-                {emojis.map((emojiObject) => (
-                  <div key={emojiObject.emoji} className="relative">
-                    {emojiObject.emojiCaught ? <p className="absolute text-xs">✅</p> : null}
-                    <p>{emojiObject.emoji}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
+        <InfoSection emojis={emojis} />
       </div>
-      <div className="w-full flex flex-col lg:flex-row lg:text-xl gap-4 justify-between text-gray-900">
-        <p>
-          by{" "}
-          <a className="underline" href="https://dcrebb.in">
-            dcrebb.in
-          </a>
-        </p>
-        <p>
-          An experiment, powered by{" "}
-          <a href="https://gemini.google.com" className="border-black/50 border-[1px] px-1 rounded-lg font-bold">
-            Gemini
-          </a>
-        </p>
-      </div>
+      <Footer />
     </main>
   );
 }
