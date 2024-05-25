@@ -208,7 +208,7 @@ export default function Home() {
           </div>
           <div className="bg-white/30 w-full md:h-[17rem] lg:h-[30rem] h -60 rounded-lg flex items-center justify-center relative drop-shadow-md">
             <div ref={overlayRef} className="w-full h-full absolute"></div>
-            <video ref={(video) => setVideo(video)} className="w-full h-full object-cover rounded-lg" autoPlay playsInline />
+            <video ref={(video) => setVideo(video)} className="w-full h-full object-cover rounded-lg -scale-x-100" autoPlay playsInline />
             <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">{count > 0 && takingPhoto ? <p className="text-[8rem] text-black/50">{count}</p> : null}</div>
             <div className="flex items-center absolute bottom-0 gap-2 mb-2">
               <button
