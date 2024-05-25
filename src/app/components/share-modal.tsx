@@ -51,7 +51,7 @@ export default function ShareModal(props: Readonly<ShareModalProps>) {
         <div className="w-full h-full flex items-center justify-center">
           <div className="w-full p-4 h-full flex items-center justify-center">
             {props.sharedImageRef.current?.src ? null : <PlaceholderIcon />}
-            <img ref={props.sharedImageRef} className="object-cover w-max block overflow-hidden h-full image rounded-lg drop-shadow-md" width={300} height={300}></img>
+            <img ref={props.sharedImageRef} className="object-cover w-max block overflow-hidden h-full image rounded-lg drop-shadow-md -scale-x-100" width={300} height={300}></img>
           </div>
         </div>
       </div>

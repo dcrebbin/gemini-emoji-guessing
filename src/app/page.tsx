@@ -5,7 +5,7 @@ import React from "react";
 import ShareIcon from "../icons/share";
 import { EMOJIS } from "./constants/emojis";
 import Footer from "./components/footer";
-import ShareModal from "./components/download-modal";
+import ShareModal from "./components/share-modal";
 import Webcam from "./components/web-cam";
 import InfoSection, { EmojiObject } from "./components/info-section";
 import PhotoEmojiComparison from "./components/photo-emoji-comparison";
