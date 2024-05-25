@@ -13,7 +13,7 @@ export interface EmojiObject {
 
 export default function InfoSection(props: Readonly<InfoSectionProps>) {
   return (
-    <div className="w-full flex flex-col gap-4 order-1">
+    <div className="w-full flex flex-col gap-4 order-1 z-10">
       <div className="flex flex-col gap-4 text-xl lg:text-3xl text-white">
         <p>Where&apos;s that emoji?</p>
         <p>Where did it go?</p>

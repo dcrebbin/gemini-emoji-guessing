@@ -9,6 +9,7 @@ import ShareModal from "./components/share-modal";
 import Webcam from "./components/web-cam";
 import InfoSection, { EmojiObject } from "./components/info-section";
 import PhotoEmojiComparison from "./components/photo-emoji-comparison";
+import EmojiWallpaper from "./components/emoji-wallpaper";
 
 export default function Home() {
   const [emoji, setEmoji] = useState("❔");
@@ -90,6 +91,7 @@ export default function Home() {
 
   return (
     <main className="font-sans flex flex-col items-center justify-between p-8 min-h-screen overflow-auto lg:px-20 bg-no-repeat bg-cover bg-[url('/images/ffflux.svg')]">
+      <EmojiWallpaper emoji={emoji} />
       <ShareModal emoji={emoji} imageRef={imageRef} sharedImageRef={sharedImageRef} modalRef={modalRef} />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full h-full">
         <div className="w-full flex flex-col items-center gap-4 order-1 lg:order-2">

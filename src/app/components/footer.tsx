@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Footer() {
   return (
-    <footer className="w-full flex flex-col lg:flex-row lg:text-xl gap-4 justify-between text-gray-900">
+    <footer className="w-full flex flex-col lg:flex-row lg:text-xl gap-4 justify-between text-gray-900 z-10">
       <p>
         by{" "}
         <a className="underline" href="https://dcrebb.in">
