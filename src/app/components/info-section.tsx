@@ -8,7 +8,7 @@ export interface EmojiObject {
   emojiCaught: boolean;
 }
 
-export default function InfoSection(props: InfoSectionProps) {
+export default function InfoSection(props: Readonly<InfoSectionProps>) {
   return (
     <div className="w-full flex flex-col gap-4 order-1">
       <div className="flex flex-col gap-4 text-xl lg:text-3xl text-white">

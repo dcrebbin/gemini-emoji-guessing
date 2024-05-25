@@ -6,27 +6,31 @@ interface PhotoEmojiComparisonProps {
   awaitingResponse: boolean;
 }
 
-export default function PhotoEmojiComparison(props: PhotoEmojiComparisonProps) {
+export default function PhotoEmojiComparison(props: Readonly<PhotoEmojiComparisonProps>) {
   const copyRef = useRef<HTMLButtonElement | null>(null);
 
+  //Very sus way todo animation lol
   function copyAnimation() {
     setTimeout(() => {
-      copyRef.current!.innerText = "COPY";
+      if (!copyRef.current) return;
+      copyRef.current.innerText = "COPY";
       copyRef.current?.classList.remove("text-2xl");
       copyRef.current?.classList.remove("pb-1");
       copyRef.current?.classList.add("text-3xl");
-      copyRef.current!.style.backgroundColor = "black";
+      copyRef.current.style.backgroundColor = "black";
     }, 200);
   }
 
   function copyEmoji() {
     navigator.clipboard.writeText(props.emoji).then(() => {
+      if (!copyRef.current) return;
+
       console.log("Emoji copied to clipboard!");
-      copyRef.current!.innerText = "COPIED!";
+      copyRef.current.innerText = "COPIED!";
       copyRef.current?.classList.add("pb-1");
       copyRef.current?.classList.remove("text-3xl");
       copyRef.current?.classList.add("text-2xl");
-      copyRef.current!.style.backgroundColor = "green";
+      copyRef.current.style.backgroundColor = "green";
       copyAnimation();
     });
   }

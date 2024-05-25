@@ -37,7 +37,7 @@ export default function Home() {
 
   async function processEmojiIdentification(emojiResponse: Response) {
     setAwaitingResponse(false);
-    const returnedEmoji = (await emojiResponse.text()).trim() as string;
+    const returnedEmoji = (await emojiResponse.text()).trim();
     if (returnedEmoji !== "") {
       setEmoji(returnedEmoji);
       caughtEmoji(returnedEmoji);

@@ -9,7 +9,7 @@ interface DownloadModalProps {
   modalRef: React.RefObject<HTMLDivElement>;
 }
 
-export default function DownloadModal(props: DownloadModalProps) {
+export default function DownloadModal(props: Readonly<DownloadModalProps>) {
   function downloadSharingImage() {
     const image = new Image();
     image.src = props.imageRef.current!.src;
