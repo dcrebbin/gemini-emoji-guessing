@@ -7,6 +7,12 @@ import StopIcon from "../icons/stop";
 import ShareIcon from "../icons/share";
 import DownloadIcon from "../icons/download";
 import PlaceholderIcon from "../icons/placeholder";
+import { EMOJIS } from "./constants/emojis";
+
+interface EmojiObject {
+  emoji: string;
+  emojiCaught: boolean;
+}
 
 export default function Home() {
   const [video, setVideo] = useState<HTMLVideoElement | null>(null);
@@ -18,6 +24,7 @@ export default function Home() {
   const [takingPhoto, setTakingPhoto] = useState(false);
   const [awaitingResponse, setAwaitingResponse] = useState(false);
   const overlayRef = useRef<HTMLDivElement | null>(null);
+  const [emojis, setEmojis] = useState<EmojiObject[]>(EMOJIS);
 
   const modalRef = useRef<HTMLDivElement | null>(null);
   let photoTaken = false;
@@ -110,13 +117,25 @@ export default function Home() {
       setEmoji("❌");
     })) as Response;
     setAwaitingResponse(false);
-    const returnedEmoji = (await emojiResponse.text()) as string;
+    const returnedEmoji = (await emojiResponse.text()).trim() as string;
     if (returnedEmoji !== "") {
       setEmoji(returnedEmoji);
+      caughtEmoji(returnedEmoji);
       console.log(`The emoji is: ${returnedEmoji}`);
     } else {
       setEmoji("❌");
       console.log("No emoji found.");
+    }
+  }
+
+  function caughtEmoji(emoji: string) {
+    const emojiIndex = emojis.findIndex((emojiObject) => emojiObject.emoji === emoji);
+    if (emojiIndex !== -1) {
+      setEmojis((prev) => {
+        const newEmojis = [...prev];
+        newEmojis[emojiIndex].emojiCaught = true;
+        return newEmojis;
+      });
     }
   }
 
@@ -242,8 +261,18 @@ export default function Home() {
             <p>Where did it go?</p>
             <p>I know it was here, somewhere.</p>
           </div>
-          <div className="w-64 pb-3 lg:w-[30rem] h-auto">
-            <img alt="emoji keyboard" src="/images/emoji-keyboard.jpg" width={450} height={300}></img>
+          <div className="w-64 pb-3 lg:w-[25rem] h-auto drop-shadow-md">
+            <div className="bg-[#E9EBEF] h-fit flex p-2 flex-col ">
+              <p className="text-[#BBBCC0] px-2 text-xs font-bold">SMILEYS & PEOPLE</p>
+              <div className="grid grid-flow-col grid-rows-5 overflow-x-auto overflow-y-hidden text-4xl">
+                {emojis.map((emojiObject) => (
+                  <div key={emojiObject.emoji} className="relative">
+                    {emojiObject.emojiCaught ? <p className="absolute text-xs">✅</p> : null}
+                    <p>{emojiObject.emoji}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
