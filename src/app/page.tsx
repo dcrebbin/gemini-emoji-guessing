@@ -63,7 +63,7 @@ export default function Home() {
 
   function caughtEmoji(emoji: string) {
     const emojiIndex = emojis.findIndex((emojiObject) => emojiObject.emoji === emoji);
-    if (emojiIndex !== -1 && !emojis[emojiIndex].emojiCaught) {
+    if (emojiIndex !== -1) {
       console.log("Emoji Caught!");
       setEmojisCollected((prev) => prev + 1);
       setEmojis((prev) => {

@@ -50,7 +50,7 @@ export default function EmojiShowcase(props: Readonly<EmojiShowcaseProps>) {
             <div className="grid grid-flow-col grid-rows-5 overflow-x-auto overflow-y-hidden text-4xl" ref={props.emojiShowcaseView}>
               {props.emojis.map((emojiObject) => (
                 <div key={`image${emojiObject.emoji}`} className="relative">
-                  {!emojiObject.image ? <p>❔</p> : <img src={emojiObject.image} alt={emojiObject.emoji} className="h-10 w-10 object-cover" />}
+                  {!emojiObject.image ? <p>❔</p> : <img src={emojiObject.image} alt={emojiObject.emoji} className="h-10 w-10 object-cover -scale-x-100" />}
                 </div>
               ))}
             </div>
