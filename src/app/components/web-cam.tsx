@@ -100,7 +100,7 @@ export default function Webcam(props: Readonly<WebcamProps>) {
   }
 
   return (
-    <div className="bg-white/30 w-full md:h-[17rem] lg:h-[30rem] h -60 rounded-lg flex items-center justify-center relative drop-shadow-md">
+    <div className="bg-white/30 w-full md:h-[17rem] lg:h-[30rem] h -60 rounded-lg flex items-center justify-center relative drop-shadow-md z-10">
       <div ref={overlayRef} className="w-full h-full absolute z-50 pointer-events-none"></div>
       <video ref={(video) => setVideo(video)} className="w-full h-full object-cover rounded-lg -scale-x-100" autoPlay playsInline>
         <track kind="captions" />

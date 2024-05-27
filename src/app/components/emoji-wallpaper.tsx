@@ -2,7 +2,7 @@ import React from "react";
 
 export default function EmojiWallpaper(props: any) {
   return (
-    <div className="w-full h-full fixed z-0 p-20">
+    <div className="w-full h-full fixed z-0 p-20 pointer-events-none">
       <p className="text-[8rem] absolute left-[30rem] rotate-12 blur-[1px]">{props.emoji}</p>
       <p className="text-[10rem] absolute left-[45rem] -rotate-12 blur-[1px]">{props.emoji}</p>
       <p className="text-[15rem] absolute left-[5rem] -rotate-12 blur-[4px]">{props.emoji}</p>
