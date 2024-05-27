@@ -69,6 +69,7 @@ export default function Home() {
       setEmojis((prev) => {
         const newEmojis = [...prev];
         newEmojis[emojiIndex].emojiCaught = true;
+        newEmojis[emojiIndex].image = imageRef.current?.src;
         localStorage.setItem("emojisCaught", JSON.stringify(newEmojis));
         console.log("Emoji Saved!");
         return newEmojis;

@@ -8,6 +8,7 @@ interface InfoSectionProps {
 }
 export interface EmojiObject {
   emoji: string;
+  image: string;
   emojiCaught: boolean;
 }
 
